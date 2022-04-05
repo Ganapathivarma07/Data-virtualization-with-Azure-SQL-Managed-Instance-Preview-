@@ -1,11 +1,11 @@
-# Tutorial: Migrate SQL Server to Azure SQL Managed Instance using Log Replay Service (Preview)
+# Tutorial: Data virtualization with Azure SQL Managed Instance – preview (Under Construction)
 
-This template allows you to create a SQL Server instance on Virtual Machine which acts as a source for migration and a Azure SQL Managed instance inside a new virtual network. Storage account is already provisioned which is required to copy and transfer SQL Server backups between source and target.
+This template allows you to create a a Virtual Machine with SSMS installed which acts as a jump box for accessing Azure SQL Managed instance inside a new virtual network. Storage account is deployed which is required to store data sets in CSV, Parquet or Json format.
 
 
 # Solution overview and deployed resources. 
 
-In this tutorial, you will deploy resources required for the lab. 
+In this tutorial, you will deploy resources required for the lab.  
 
 ## Target audience
 
@@ -21,7 +21,7 @@ The [Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI
 
 ![alt image]()
 
-- SQL Server instance on Azure VM.
+- Azure VM with SSMS pre-installed
 - Azure SQL managed instance inside a virtual network
 - A storage account
 
