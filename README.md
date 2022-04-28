@@ -19,7 +19,7 @@ In this tutorial, you will deploy resources required for the lab.
 The [Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/master/template.json) Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
 
 
-![alt image]()
+![alt image](https://github.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/blob/master/Images/data%20virtualization%20image%20github.png)
 
 - Azure VM with SSMS pre-installed
 - Azure SQL managed instance inside a virtual network
