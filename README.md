@@ -85,20 +85,22 @@ Final URL: <Base URL>/<uri>
 
 If you are familiar with PolyBase feature of SQL Server, you may have already recognized the scenarios and underlying concepts. Data virtualization capabilities of Azure SQL Managed Instance use the same syntax as PolyBase and enrich it further with new options. PolyBase queries running on your SQL Server instance and targeting files stored in Azure Data Lake Storage or Blob Storage will continue working on your managed instance with minimal intervention to specify location prefix corresponding to the type of external source and endpoint, like abs:// instead of the generic https:// location prefix.
 
+```
 --Blob Storage endpoint
 abs://<container>@<storage_account>.blob.core.windows.net/<path>/<file_name>.parquet
 
 --Data Lake endpoint
 adls://<container>@<storage_account>.dfs.core.windows.net/<path>/<file_name>.parquet
-
+```
 
 ## To enable data virtualization capabilities on your managed instance, run the following commands: 
 
+```sql
 exec sp_configure 'polybase_enabled', 1;
 go
 reconfigure;
 go
- 
+```
 
 ## To access a dataset in public location:
 
@@ -106,19 +108,18 @@ For simplicity, we are going to use publicly available Bing COVID-19 dataset tha
 
 First, create external data source encapsulating data related to the file location:
 
-
-
+```sql
 CREATE EXTERNAL DATA SOURCE DemoPublicExternalDataSource
 WITH (
 	LOCATION = 'abs://public@pandemicdatalake.blob.core.windows.net/curated/covid-19/bing_covid-19_data/latest' 
 )
- 
+``` 
 
 You’re now ready to run the first query:
 
- 
-
 --Number of confirmed Covid-19 cases per country/territory during 2020:
+	
+```sql
 SELECT countries_and_territories, sum(cases) FROM
 	OPENROWSET(
         BULK 'abs://public@pandemicdatalake.blob.core.windows.net/curated/covid-19/ecdc_cases/latest/ecdc_cases.parquet',
@@ -127,48 +128,53 @@ SELECT countries_and_territories, sum(cases) FROM
 WHERE year = '2020'
 group by countries_and_territories
 order by sum(cases) desc
- 
+``` 
 
 ## To access a dataset in private location, include the file path and credential when querying the external data source:
 
 
 ## Step 0 (optional): Create master key if it doesn't exist in the database:
 
+```sql
 CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'sasxansv34dtws4g5643634$'
 GO
-
+```
 
 ## Step 1: Create database-scoped credential (requires database master key to exist):
+	
+```sql
 Use RecoveryDB
 GO
 CREATE DATABASE SCOPED CREDENTIAL [DemoCredential]
 WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
 SECRET = 'sv=2020-10-02&st=2022-04-04T20%3A01%3A25Z&se=2022-04-08T20%3A01%3A00Z&sr=c&sp=rl&sig=pOjEPffk3dCUTKlZuGEKEAMLEED%2FGtXhU%3D';
 GO
-
+```
+	
 ## Step 2: Create external data source pointing to the file path, and referencing database-scoped credential:
 
+```sql
 CREATE EXTERNAL DATA SOURCE DemoPrivateExternalDataSource
 WITH (
-	LOCATION = 'abs://Demodata@lrsmigrate.blob.core.windows.net/',
+	LOCATION = 'abs://Demodata@demosqlmi.blob.core.windows.net/',
     CREDENTIAL = [DemoCredential] 
-
-
 )
-
+```
 
 ## Step 3: Query Parquet format data sources using OPENROWSET
 
+```sql
 SELECT TOP 1000 *
 FROM OPENROWSET(
  BULK 'postalcodes.parquet',
  DATA_SOURCE = 'DemoPrivateExternalDataSource',
  FORMAT = 'parquet'
 ) AS filerows
-
+```
 
 ## Step 4: Query CSV format data sources using OPENROWSET
-
+	
+```sql
 SELECT TOP 100 *
 FROM OPENROWSET(
 BULK 'population.csv',
@@ -180,9 +186,11 @@ WITH (
 [year] smallint,
 [population] bigint
 ) AS filerows
+```
 
-## create view on top of open rowset
-
+## Creainge view on top of OPENROWSET
+	
+```sql
 CREATE VIEW Demoview AS
 SELECT TOP 100 *
 FROM OPENROWSET(
@@ -195,14 +203,17 @@ WITH (
 [year] smallint,
 [population] bigint
 ) AS filerows
+```
 
 ## Query CSV format data source from view
 
+```sql
 select * from Demoview
+```
 
 ## Step 5: Create external file format
 
-
+```sql
 CREATE EXTERNAL FILE FORMAT DemoDataFileFormat
 WITH (
 FORMAT_TYPE=DELIMITEDTEXT,
@@ -211,10 +222,11 @@ FIELD_TERMINATOR = ',',
 STRING_DELIMITER = '"')
 )
 GO
-
+```
 
 ## Step 6: Create external table to get local query experience:
 
+```sql	
 CREATE EXTERNAL TABLE tbl_population(
 [country_code] VARCHAR (5) COLLATE Latin1_General_BIN2,
 [country_name] VARCHAR (100) COLLATE Latin1_General_BIN2,
@@ -226,20 +238,20 @@ LOCATION = 'population.csv',
 DATA_SOURCE = DemoPrivateExternalDataSource,
 FILE_FORMAT = DemoDataFileFormat,
 );
-
-
 GO
+```
 
 ## Step 7: Once the external table is created, you can query it just like any other table:
 
 /****** Script for SelectTopNRows command from SSMS  ******/
-
+	
+```sql	
 SELECT TOP (1000) [country_code]
       ,[country_name]
       ,[year]
       ,[population]
   FROM [RecoveryDB].[dbo].[tbl_population]
-
+```
 
 ## Related references
 
