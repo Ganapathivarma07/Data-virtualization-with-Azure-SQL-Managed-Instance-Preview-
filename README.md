@@ -134,7 +134,7 @@ order by sum(cases) desc
 
 ## Step 0 (optional): Create master key if it doesn't exist in the database:
 
-CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Abc.1234$#$'
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'sasxansv34dtws4g5643634$'
 GO
 
 
@@ -143,14 +143,14 @@ Use RecoveryDB
 GO
 CREATE DATABASE SCOPED CREDENTIAL [DemoCredential]
 WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
-SECRET = 'sv=2020-10-02&st=2022-04-04T20%3A01%3A25Z&se=2022-04-08T20%3A01%3A00Z&sr=c&sp=rl&sig=pOjEPffk3dCUTbki5KlZuGEKEdXvrg8AMLEED%2FGtXhU%3D';
+SECRET = 'sv=2020-10-02&st=2022-04-04T20%3A01%3A25Z&se=2022-04-08T20%3A01%3A00Z&sr=c&sp=rl&sig=pOjEPffk3dCUTKlZuGEKEAMLEED%2FGtXhU%3D';
 GO
 
 ## Step 2: Create external data source pointing to the file path, and referencing database-scoped credential:
 
 CREATE EXTERNAL DATA SOURCE DemoPrivateExternalDataSource
 WITH (
-	LOCATION = 'abs://sqlmigrate@lrsmigrate.blob.core.windows.net/',
+	LOCATION = 'abs://Demodata@lrsmigrate.blob.core.windows.net/',
     CREDENTIAL = [DemoCredential] 
 
 
