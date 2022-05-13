@@ -41,13 +41,12 @@ Using this template, you can quickly deploy resources and then follow below step
 <!-- Powershell command for Translating Git URL for template.json
     $url = "https://raw.githubusercontent.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/master/template.json"
     [uri]::EscapeDataString($url)
-    >> uri = https%3A%2F%2Fgithub.com%2FGanapathivarma07%2FLRS-Migration-AzureSQLMI%2Fblob%2F
-master%2Ftemplate.json
+    >> uri = https%3A%2F%2Fraw.githubusercontent.com%2FGanapathivarma07%2FData-virtualization-with-Azure-SQL-Managed-Instance-Preview-%2Fmaster%2Ftemplate.json
 
 Base URL: https://portal.azure.com/#create/Microsoft.Template/uri
 Final URL: <Base URL>/<uri>
 -->
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https%3A%2F%2Fraw.githubusercontent.com%2FGanapathivarma07%2FData-virtualization-with-Azure-SQL-Managed-Instance-Preview-%2Fmaster%2Ftemplate.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FGanapathivarma07%2FData-virtualization-with-Azure-SQL-Managed-Instance-Preview-%2Fmaster%2Ftemplate.json)
 
 ## Deploying an ARM Template using the Azure portal
 
