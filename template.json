@@ -116,13 +116,26 @@
                 "description": "Enter license type."
             }
         },
-        "virtualMachineName": {
-            "defaultValue": "SourceSQLVM",
-            "type": "String",
-            "metadata": {
-                "description": "The name of the VM"
-            }
-        },
+
+		"OSVersion": {
+      "type": "string",
+      "defaultValue": "2019-datacenter-gensecond",
+      "allowedValues": [
+        "2019-datacenter-gensecond",
+        "2019-datacenter-core-gensecond",
+        "2019-datacenter-core-smalldisk-gensecond",
+        "2019-datacenter-core-with-containers-gensecond",
+        "2019-datacenter-core-with-containers-smalldisk-g2",
+        "2019-datacenter-smalldisk-gensecond",
+        "2019-datacenter-with-containers-gensecond",
+        "2019-datacenter-with-containers-smalldisk-g2",
+        "2016-datacenter-gensecond"
+      ],
+      "metadata": {
+        "description": "The Windows version for the VM. This will pick a fully patched Gen2 image of this given Windows version."
+      }
+    },
+
         "virtualMachineSize": {
             "defaultValue": "Standard_D8s_v3",
             "type": "String",
@@ -137,36 +150,7 @@
                 "description": "Specify the resrouce group of the existing VNet"
             }
         },
-        "imageOffer": {
-            "defaultValue": "sql2019-ws2019",
-            "allowedValues": [
-                "sql2019-ws2019",
-                "sql2017-ws2019",
-                "SQL2017-WS2016",
-                "SQL2016SP1-WS2016",
-                "SQL2016SP2-WS2016",
-                "SQL2014SP3-WS2012R2",
-                "SQL2014SP2-WS2012R2"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Windows Server and SQL Offer"
-            }
-        },
-        "sqlSku": {
-            "defaultValue": "Standard",
-            "allowedValues": [
-                "Standard",
-                "Enterprise",
-                "SQLDEV",
-                "Web",
-                "Express"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "SQL Server Sku"
-            }
-        },
+      
         "adminUsername": {
             "type": "String",
             "metadata": {
@@ -179,51 +163,23 @@
                 "description": "The admin password of the VM"
             }
         },
-        "storageWorkloadType": {
-            "defaultValue": "General",
-            "allowedValues": [
-                "General",
-                "OLTP",
-                "DW"
-            ],
-            "type": "String",
+
+		"_artifactsLocation": {
+            "type": "string",
             "metadata": {
-                "description": "SQL Server Workload Type"
-            }
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/34458bcec7600b697053f62bfba77c0b2acdf3c7/installSSMS.ps1"
         },
-        "sqlDataDisksCount": {
-            "defaultValue": 1,
-            "minValue": 1,
-            "maxValue": 8,
-            "type": "Int",
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
             "metadata": {
-                "description": "Amount of data disks (1TB each) for SQL Data files"
-            }
-        },
-        "dataPath": {
-            "defaultValue": "F:\\SQLData",
-            "type": "String",
-            "metadata": {
-                "description": "Path for SQL Data files. Please choose drive letter from F to Z, and other drives from A to E are reserved for system"
-            }
-        },
-        "sqlLogDisksCount": {
-            "defaultValue": 1,
-            "minValue": 1,
-            "maxValue": 8,
-            "type": "Int",
-            "metadata": {
-                "description": "Amount of data disks (1TB each) for SQL Log files"
-            }
-        },
-        "logPath": {
-            "defaultValue": "G:\\SQLLog",
-            "type": "String",
-            "metadata": {
-                "description": "Path for SQL Log files. Please choose drive letter from F to Z and different than the one used for SQL data. Drive letter from A to E are reserved for system"
-            }
-        }
+                "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+            },
+            "defaultValue": ""
+        }        
     },
+
     "variables": {
         "networkSecurityGroupName": "[concat('SQLMI-', parameters('managedInstanceName'), '-NSG')]",
         "routeTableName": "[concat('SQLMI-', parameters('managedInstanceName'), '-Route-Table')]",
@@ -232,7 +188,8 @@
         "publicIpAddressName": "[concat('SQLMI-', parameters('managedInstanceName'), '-JB-IP')]",
         "jbNetworkSecurityGroupName": "[concat('SQLMI-', parameters('managedInstanceName'), '-JB-NSG')]",
         "storageAccountNamePrefix": "storage",
-        "storageAccountName": "[toLower(concat(variables('storageAccountNamePrefix'), uniqueString(resourceGroup().id)))]"
+        "storageAccountName": "[toLower(concat(variables('storageAccountNamePrefix'), uniqueString(resourceGroup().id)))]",
+		"scriptFileUri": "[uri(parameters('_artifactsLocation'), concat('installSSMS.ps1', parameters('_artifactsLocationSasToken')))]"
     },
     "resources": [
         {
@@ -381,14 +338,14 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-12-01",
-            "name": "[parameters('virtualMachineName')]",
+            "name": "[variables('virtualMachineName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[variables('networkInterfaceName')]"
             ],
             "properties": {
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachineName')]",
+                    "computerName": "[variables('virtualMachineName')]",
                     "adminUsername": "[parameters('administratorLogin')]",
                     "adminPassword": "[parameters('administratorLoginPassword')]",
                     "windowsConfiguration": {
@@ -400,9 +357,9 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "MicrosoftSQLServer",
-                        "offer": "[parameters('imageOffer')]",
-                        "sku": "[parameters('sqlSku')]",
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+						"sku": "[parameters('OSVersion')]",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -419,31 +376,35 @@
                         }
                     ]
                 }
-            }
-        },
-        {
-            "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
-            "apiVersion": "2017-03-01-preview",
-            "name": "[parameters('virtualMachineName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
-            ],
-            "properties": {
-                "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
-                "sqlManagement": "Full",
-                "SqlServerLicenseType": "PAYG",
-                "StorageConfigurationSettings": {
-                    "StorageWorkloadType": "[parameters('storageWorkloadType')]",
-                    "SQLDataSettings": {
-                        "DefaultFilePath": "[parameters('dataPath')]"
-                    },
-                    "SQLLogSettings": {
-                        "DefaultFilePath": "[parameters('logPath')]"
+            },
+			    "resources": [
+                {
+                  "name": "SetupSSMS",
+                  "type": "extensions",
+                  "location": "[parameters('location')]",
+                  "apiVersion": "2019-12-01",
+                  "dependsOn": [
+                    "[variables('virtualMachineName')]"
+                  ],
+                  "tags": {
+                    "displayName": "SetupSSMS"
+                  },
+                  "properties": {
+                    "publisher": "Microsoft.Compute",
+                    "type": "CustomScriptExtension",
+                    "typeHandlerVersion": "1.9",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "fileUris": [
+                        "[variables('scriptFileUri')]"
+                      ],
+                      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File installSSMS.ps1"
                     }
+                  }
                 }
-            }
+              ]  
         },
+        
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-06-01",
