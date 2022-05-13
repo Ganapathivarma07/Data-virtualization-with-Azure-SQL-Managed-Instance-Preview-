@@ -54,8 +54,8 @@ Final URL: <Base URL>/<uri>
 - Visit https://portal.azure.com
 - Allow all the resources in the deployment to complete
 - Create Azure blob storage or Data lake gen2 containter
-- Copy the postalcodes.parquet & populatio.csv dataset to Azure Blob storage
-- To access a private location, use a Shared Access Signature (SAS) with proper access permissions and validity period to authenticate to the storage account.
+- Copy the postalcodes.parquet & populatio.csv dataset files from github Images folder (https://github.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/tree/master/Images) to Azure Blob storage
+- To access a data set from private location, use a Shared Access Signature (SAS) with proper access permissions and validity period to authenticate to the storage account.
 
 
 ## Azure services and related products
