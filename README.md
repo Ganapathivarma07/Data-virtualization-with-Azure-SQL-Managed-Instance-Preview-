@@ -1,6 +1,6 @@
 # Tutorial: Data virtualization with Azure SQL Managed Instance – preview (Under Construction)
 
-This template allows you to create a a Virtual Machine with SSMS installed which acts as a jump box for accessing Azure SQL Managed instance inside a new virtual network. Storage account is deployed which is required to store data sets in CSV, Parquet or Json format.
+This template allows you to create a a Virtual Machine with SSMS application installed which acts as a jump box for accessing Azure SQL Managed instance inside a new virtual network. Storage account is deployed which is required to store data sets in CSV, Parquet or Json format.
 
 
 # Solution overview and deployed resources. 
@@ -50,8 +50,8 @@ Final URL: <Base URL>/<uri>
 
 ## Deploying an ARM Template using the Azure portal
 
+- Input _artifactsLocation parameter value = https://raw.githubusercontent.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/master/installSSMS.ps1, this will use the powershell script stored in github repo
 - Visit https://portal.azure.com
-
 - Allow all the resources in the deployment to complete
 - Create Azure blob storage or Data lake gen2 containter
 - Copy the postalcodes.parquet & populatio.csv dataset to Azure Blob storage
