@@ -16,7 +16,7 @@ Typical use cases for data virtualization include:
 
 # Architecture
 
-The [Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/master/template.json) Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
+The [Template.json](https://github.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/blob/master/template.json) Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
 
 - Azure VM with SSMS pre-installed
 - Azure SQL managed instance inside a virtual network
@@ -24,7 +24,7 @@ The [Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI
 
 Using this template, you can quickly deploy resources and then follow below step by step instructions to query parquet/CSV files in Azure Data lake using T-SQL Syntax.
 
-[Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/master/template.json) can be modified to match your current infrastructure needs.
+[Template.json](https://github.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/blob/master/template.json) can be modified to match your current infrastructure needs.
 
 
 ![alt image](https://github.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/blob/master/Images/data%20virtualization%20image%20github.png)
@@ -39,7 +39,7 @@ Using this template, you can quickly deploy resources and then follow below step
 
 ## One Click Deploying Template
 <!-- Powershell command for Translating Git URL for template.json
-    $url = "https://raw.githubusercontent.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/master/template.json"
+    $url = "https://raw.githubusercontent.com/Ganapathivarma07/Data-virtualization-with-Azure-SQL-Managed-Instance-Preview-/master/template.json"
     [uri]::EscapeDataString($url)
     >> uri = https%3A%2F%2Fgithub.com%2FGanapathivarma07%2FLRS-Migration-AzureSQLMI%2Fblob%2F
 master%2Ftemplate.json
