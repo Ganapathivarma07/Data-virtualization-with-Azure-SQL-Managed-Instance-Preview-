@@ -1,4 +1,4 @@
-# Tutorial: Data virtualization with Azure SQL Managed Instance – preview
+# Tutorial: Data virtualization with Azure SQL Managed Instance
 
 This template allows you to create a a Virtual Machine with SSMS application installed which acts as a jump box for accessing Azure SQL Managed instance inside a new virtual network. Storage account is deployed which is required to store data sets in CSV, Parquet or Json format.
 
